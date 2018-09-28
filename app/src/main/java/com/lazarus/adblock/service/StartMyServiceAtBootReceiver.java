@@ -1,0 +1,29 @@
+package com.lazarus.adblock.service;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+public class StartMyServiceAtBootReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+
+            // Start message bus
+            Intent startIntent = new Intent(context, AdBlockMessageBus.class);
+            startIntent.setAction("");
+            context.startService(startIntent);
+
+            // Start filters updater
+            startIntent = new Intent(context, FiltersUpdater.class);
+            startIntent.setAction("");
+            context.startService(startIntent);
+
+            // Start ad blocking service
+            startIntent = new Intent(context, AdblockSubsystem.class);
+            startIntent.setAction(String.valueOf(AdblockSubsystem.ServiceActions.INIT));
+            context.startService(startIntent);
+        }
+    }
+}
