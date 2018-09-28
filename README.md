@@ -29,7 +29,7 @@ The apps themselves do not use the air interface as they are proxied through the
 Use Android Studio with the appropriate SDK versions.
 
 # APK Install
-Either build from scratch or use the [provided pre-built APK](bin/lazarus.apk) (use 'Save Link As' to download it). Remeber to enable _Unknown Sources_ in your Android app settings to allow the APK to be installed after download.
+Either build from scratch or use the [provided pre-built APK](https://github.com/doronsadeh/android-adblock/blob/master/bin/lazarus.apk?raw=true) (use 'Save Link As' to download it). Remeber to enable _Unknown Sources_ in your Android app settings to allow the APK to be installed after download.
 
 
 Enjoy and fork, it's free.
