@@ -3,6 +3,10 @@
 ![Mobile Ad Blocker](assets/logo.png "Mobile Ad Block")
 
 # Overview
+<p align="center">
+    <img src="assets/app.jpeg" />
+</p>
+
 The Lazarus Android ad blocker is an app for rooted phones that blocks ads in web browsing sessions within any browser or WebView, as well as in apps.
 
 This brand new design and implementation are based on my extensive experience in creating ad blockers for mobile and I am providing this as a contribution to the community.
