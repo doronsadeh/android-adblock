@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.lazarus.adblock.R;
+import com.lazarus.adblock.Stats;
 import com.lazarus.adblock.configuration.Configuration;
 import com.lazarus.adblock.connections.ConnectionManager;
 import com.lazarus.adblock.exceptions.AdblockException;
@@ -181,7 +182,7 @@ public class AdblockSubsystem extends IntentService {
                                     if (null != l && l.isReady()) {
                                         AdBlockServiceForegroundNotification.modifyIcon(R.drawable.running);
                                         AdBlockServiceForegroundNotification.modifyTickerText(getResources().getString(R.string.adblock_active) +
-                                                (null != Configuration.getFilterLists() ? (" [updated: " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) + "]" : ""));
+                                                (null != Configuration.getFilterLists() ? (" " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) : ""));
                                     }
                                     else {
                                         AdBlockServiceForegroundNotification.modifyIcon(R.drawable.updating);

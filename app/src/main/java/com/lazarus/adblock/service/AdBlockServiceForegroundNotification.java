@@ -48,7 +48,7 @@ public class AdBlockServiceForegroundNotification {
         ticker = _ticker;
         icon = _icon;
 
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context);
+        Notification.Builder b = new Notification.Builder(context);
         b.setOngoing(true);
         b.setContentTitle(title)
                 .setContentText(ticker)

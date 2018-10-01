@@ -31,13 +31,12 @@ public class FiltersUpdater extends IntentService {
                     continue;
                 }
 
-                long timeSinceUpdateMili = System.currentTimeMillis() - filterLists.lastUpdate;
-                if (timeSinceUpdateMili > EasyList.FILTERS_UPDATE_PERIOD_MILI) {
-                    // Try to update lists every update period
+                // If we are on a 24 hours mark, reload filters
+                if ((System.currentTimeMillis() % EasyList.FILTERS_UPDATE_PERIOD_MILI) == 0) {
                     filterLists.updateFilterLists();
+                    // If all went well wait for another 24 hours
+                    Thread.sleep(EasyList.FILTERS_UPDATE_PERIOD_MILI);
                 }
-
-                Thread.sleep(EasyList.FILTERS_UPDATE_PERIOD_MILI - timeSinceUpdateMili);
             }
         } catch (Throwable e) {
             // Nothing

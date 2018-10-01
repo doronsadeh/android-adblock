@@ -3,6 +3,7 @@ package com.lazarus.adblock.connections;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.lazarus.adblock.Stats;
 import com.lazarus.adblock.exceptions.AdblockException;
 import com.lazarus.adblock.filters.Filter;
 import com.lazarus.adblock.filters.Filter.Type;
@@ -93,6 +94,8 @@ public class TCPConnection extends Connection {
 		switch (connectionProxyMode) {
 		case BLOCK:
 			blockTraffic(sourceSocketChannel, destSocketChannel, byteBuffer, opinion.entity);
+			// Add stats here counting blocks and show at notification
+            Stats.blockedCount++;
 			break;
 
 		case PASS:

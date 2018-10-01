@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1015431653362",
+    "firebase_url": "https://android-adblock-b06f4.firebaseio.com",
+    "project_id": "android-adblock-b06f4",
+    "storage_bucket": "android-adblock-b06f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015431653362:android:9db6b854fdf31414",
+        "android_client_info": {
+          "package_name": "com.lazarus.adblock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015431653362-ej46u6aof6r8bujk3dkk3a9srde7s6cu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lazarus.adblock",
+            "certificate_hash": "68df2b9c3c6c7bd5f0aca83c0fe055ae2a844829"
+          }
+        },
+        {
+          "client_id": "1015431653362-vhluurj2ipfifdum2pcikd2ik6qeonk0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC98rpSmGVyqMEHWrZR02Lt9CadCtpWBz4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015431653362-vhluurj2ipfifdum2pcikd2ik6qeonk0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

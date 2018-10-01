@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 18
+    compileSdkVersion 26
     buildToolsVersion '28.0.2'
 
     defaultConfig {
         applicationId "com.lazarus.adblock"
         minSdkVersion 18
-        targetSdkVersion 18
+        targetSdkVersion 26
     }
 
     buildTypes {
@@ -23,7 +24,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:18.0.0'
-    compile 'commons-io:commons-io:+'
-    compile 'org.ahocorasick:ahocorasick:+'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'commons-io:commons-io:+'
+    implementation 'org.ahocorasick:ahocorasick:+'
+    implementation 'com.google.firebase:firebase-crash:16.2.0'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
 }

@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.lazarus.adblock.R;
+import com.lazarus.adblock.Stats;
 import com.lazarus.adblock.configuration.Configuration;
 import com.lazarus.adblock.service.AdBlockServiceForegroundNotification;
-import com.lazarus.adblock.service.AdblockSubsystem;
 import com.lazarus.adblock.service.FiltersUpdater;
 
 import java.io.BufferedReader;
@@ -350,7 +350,7 @@ public class EasyList implements Runnable {
 
         AdBlockServiceForegroundNotification.modifyIcon(R.drawable.running);
         AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_active) +
-                            (null != Configuration.getFilterLists() ? (" [updated: " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) + "]" : ""));
+                (null != Configuration.getFilterLists() ? (" " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) : ""));
     }
 
     @Override

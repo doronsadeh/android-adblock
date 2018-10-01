@@ -14,7 +14,7 @@ Blacklists and whitelists are refreshed daily and automatically, so the blocker 
 # Usage
 Once installed the ad blocker starts automatically, downloading the blacklists and whitelists from the web. This may take a while, but after all is downloaded it should auto-start.
 
-The ad blocker auto-starts if you boot your phone and is automatically enabled, and provides a way to _*suspend*_, and _*resume*_ the blocker (via curtain logo buttons) if you encounter a website or app that are malfunctioning due to blocking.
+The ad blocker auto-starts if you boot your phone and is automatically enabled, and provides a way to _*suspend*_, and _*resume*_ the blocker (via notification icon) if you encounter a website or app that are malfunctioning due to blocking.
 
 <p align="center">
     <img src="assets/readme-image-0.png" />
