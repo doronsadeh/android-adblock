@@ -23,6 +23,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
+import javax.xml.parsers.FactoryConfigurationError;
+
 import libcore.tlswire.util.TimeConversions;
 
 import static java.lang.Math.max;
@@ -255,102 +257,108 @@ public class EasyList implements Runnable {
 
     public void updateFilterLists() throws IOException {
 
-        if (!ready) {
-            AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_updating_first_time));
-        } else {
-            AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_updating));
-        }
-
-        AdBlockServiceForegroundNotification.modifyIcon(R.drawable.updating);
-
-        Domains _blacklistDomains = new Domains();
-        Domains _whitelistDomains = new Domains();
-        CSSRules _cssRules = new CSSRules();
-        PathPatterns _purePathPatterns = new PathPatterns();
-
-        long _lastUpdate = 0L;
         try {
-            File fileDNS = new File(context.getFilesDir(), filterRulesFile_DNS);
-            if (!fileDNS.exists() || (System.currentTimeMillis() - fileDNS.lastModified() > FILTERS_UPDATE_PERIOD_MILI)) {
-                // We need to update the blocking file
-                this.parseDNSDomainsLists(fileDNS, true, _blacklistDomains);
-                _lastUpdate = System.currentTimeMillis();
+            if (!ready) {
+                AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_updating_first_time));
             } else {
-                this.parseDNSDomainsLists(fileDNS, false, _blacklistDomains);
-                _lastUpdate = max(_lastUpdate, fileDNS.lastModified());
+                AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_updating));
             }
-        } catch (IOException e) {
-            Log.e("EasyList", "Failed reading EasyList. Cannot block");
-            e.printStackTrace();
-            throw e;
-        }
 
-        try {
-            File fileEL = new File(context.getFilesDir(), filterRulesFile_EL);
-            if (!fileEL.exists() || (System.currentTimeMillis() - fileEL.lastModified() > FILTERS_UPDATE_PERIOD_MILI)) {
-                // We need to update the blocking file
-                this.parseEasyList(fileEL,
-                        true,
-                        _blacklistDomains,
-                        _whitelistDomains,
-                        _cssRules,
-                        _purePathPatterns);
-                _lastUpdate = System.currentTimeMillis();
-            } else {
-                this.parseEasyList(fileEL,
-                        false,
-                        _blacklistDomains,
-                        _whitelistDomains,
-                        _cssRules,
-                        _purePathPatterns);
-                _lastUpdate = max(_lastUpdate, fileEL.lastModified());
+            AdBlockServiceForegroundNotification.modifyIcon(R.drawable.updating);
+
+            Domains _blacklistDomains = new Domains();
+            Domains _whitelistDomains = new Domains();
+            CSSRules _cssRules = new CSSRules();
+            PathPatterns _purePathPatterns = new PathPatterns();
+
+            long _lastUpdate = 0L;
+            try {
+                File fileDNS = new File(context.getFilesDir(), filterRulesFile_DNS);
+                if (!fileDNS.exists() || (System.currentTimeMillis() - fileDNS.lastModified() > FILTERS_UPDATE_PERIOD_MILI)) {
+                    // We need to update the blocking file
+                    this.parseDNSDomainsLists(fileDNS, true, _blacklistDomains);
+                    _lastUpdate = System.currentTimeMillis();
+                } else {
+                    this.parseDNSDomainsLists(fileDNS, false, _blacklistDomains);
+                    _lastUpdate = max(_lastUpdate, fileDNS.lastModified());
+                }
+            } catch (IOException e) {
+                Log.e("EasyList", "Failed reading EasyList. Cannot block");
+                e.printStackTrace();
+                throw e;
             }
-        } catch (IOException e) {
-            Log.e("EasyList", "Failed reading EasyList. Cannot block");
-            e.printStackTrace();
-            throw e;
+
+            try {
+                File fileEL = new File(context.getFilesDir(), filterRulesFile_EL);
+                if (!fileEL.exists() || (System.currentTimeMillis() - fileEL.lastModified() > FILTERS_UPDATE_PERIOD_MILI)) {
+                    // We need to update the blocking file
+                    this.parseEasyList(fileEL,
+                            true,
+                            _blacklistDomains,
+                            _whitelistDomains,
+                            _cssRules,
+                            _purePathPatterns);
+                    _lastUpdate = System.currentTimeMillis();
+                } else {
+                    this.parseEasyList(fileEL,
+                            false,
+                            _blacklistDomains,
+                            _whitelistDomains,
+                            _cssRules,
+                            _purePathPatterns);
+                    _lastUpdate = max(_lastUpdate, fileEL.lastModified());
+                }
+            } catch (IOException e) {
+                Log.e("EasyList", "Failed reading EasyList. Cannot block");
+                e.printStackTrace();
+                throw e;
+            }
+
+            lastUpdate = _lastUpdate;
+
+            // Switch the current lists to the updated ones
+            synchronized (doubleBufferSync) {
+                // Get some more space to begin with
+                System.gc();
+
+                _whitelistDomains.build();
+                whitelistDomainsPatterns = _whitelistDomains;
+                System.gc();
+
+                _blacklistDomains.build();
+                blacklistDomainsPatterns = _blacklistDomains;
+                System.gc();
+
+                _purePathPatterns.build();
+                purePathPatterns = _purePathPatterns;
+                System.gc();
+
+                // Not using CSS as most sites are https sites
+                // _cssRules.build();
+                // cssHidingRules = _cssRules;
+                // System.gc();
+            }
+
+            ready = true;
+
+            // Start the filter updater service
+            Intent startIntent = new Intent(context, FiltersUpdater.class);
+            startIntent.setAction("");
+            context.startService(startIntent);
+
+            Log.i(TAG, "EasyList finished loading");
+
+            // Register the EasyList class in the config. to allow updater service to update lists periodically
+            Configuration.registerFilterLists(this);
+
+            AdBlockServiceForegroundNotification.modifyIcon(R.drawable.running);
+            AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_active) +
+                    (null != Configuration.getFilterLists() ? (" " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) : ""));
         }
-
-        lastUpdate = _lastUpdate;
-
-        // Switch the current lists to the updated ones
-        synchronized (doubleBufferSync) {
-            // Get some more space to begin with
-            System.gc();
-
-            _whitelistDomains.build();
-            whitelistDomainsPatterns = _whitelistDomains;
-            System.gc();
-
-            _blacklistDomains.build();
-            blacklistDomainsPatterns = _blacklistDomains;
-            System.gc();
-
-            _purePathPatterns.build();
-            purePathPatterns = _purePathPatterns;
-            System.gc();
-
-            // Not using CSS as most sites are https sites
-            // _cssRules.build();
-            // cssHidingRules = _cssRules;
-            // System.gc();
+        catch (Throwable t) {
+            AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_update_failed));
+            ready = false;
         }
-
-        ready = true;
-
-        // Start the filter updater service
-        Intent startIntent = new Intent(context, FiltersUpdater.class);
-        startIntent.setAction("");
-        context.startService(startIntent);
-
-        Log.i(TAG, "EasyList finished loading");
-
-        // Register the EasyList class in the config. to allow updater service to update lists periodically
-        Configuration.registerFilterLists(this);
-
-        AdBlockServiceForegroundNotification.modifyIcon(R.drawable.running);
-        AdBlockServiceForegroundNotification.modifyTickerText(context.getResources().getString(R.string.adblock_active) +
-                (null != Configuration.getFilterLists() ? (" " + TimeConversions.dateFromEpochMili(Configuration.getFilterLists().lastUpdate)) : ""));
     }
 
     @Override

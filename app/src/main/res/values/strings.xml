@@ -9,6 +9,7 @@
     <string name="adblock_active">Active</string>
     <string name="adblock_updating_first_time">Downloading filters for the first time</string>
     <string name="adblock_updating">Updating filters</string>
+    <string name="adblock_update_failed">Updating filters failed, blocking disabled</string>
     <string name="adblock_paused">Paused</string>
     <string name="adblock_filters_updater_service">adblock_filters_updater_service</string>
     <string name="welcome">Welcome to Lazarus mobile ad blocking system. Lazarus blocks in-app as well as in-browser ads.\n\nYou can now close this app, and control Lazarus via its notification icon in the notifications bar where you can PAUSE blocking at any time, and RESTART it later on.</string>

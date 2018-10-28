@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.google.firebase.crash.FirebaseCrash;
 import com.lazarus.adblock.Stats;
 import com.lazarus.adblock.configuration.Configuration;
@@ -25,6 +27,7 @@ import com.lazarus.adblock.service.AdBlockMessageBus;
 import com.lazarus.adblock.service.AdblockSubsystem;
 import com.lazarus.adblock.R;
 
+import io.fabric.sdk.android.Fabric;
 import libcore.tlswire.util.ToastIt;
 
 import static com.lazarus.adblock.service.AdBlockServiceForegroundNotification.modify;
@@ -39,6 +42,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
